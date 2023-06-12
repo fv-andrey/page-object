@@ -4,8 +4,7 @@ import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.Keys;
 import ru.netology.data.DataHelper;
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 
 public class TransferPage {
@@ -14,6 +13,7 @@ public class TransferPage {
     private SelenideElement fromField = $("[data-test-id='from'] input");
     private SelenideElement buttonTransfer = $("[data-test-id='action-transfer']");
     private SelenideElement buttonCancel = $("[data-test-id='action-cancel']");
+    private SelenideElement invalidInputCard = $("[data-test-id='error-notification'] .notification__content");
 
     public TransferPage() {
         heading.shouldBe(visible, text("Пополнение карты"));
@@ -47,11 +47,13 @@ public class TransferPage {
         return new DashboardPageAfterTransfer();
     }
 
-    public void invalidActionTransferIfCardNumbersEquals(String amount, String from) {
+    public TransferPage invalidActionTransfer(String amount, String from) {
         amountField.sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         amountField.setValue(amount);
         fromField.sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         fromField.setValue(from);
         buttonTransfer.click();
+        invalidInputCard.shouldBe(visible, exactText("Ошибка! Произошла ошибка"));
+        return this;
     }
 }

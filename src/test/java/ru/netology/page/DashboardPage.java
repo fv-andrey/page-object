@@ -19,10 +19,10 @@ public class DashboardPage {
         heading.shouldBe(visible);
         int firstCard = getCardBalance(0);
         int secondCard = getCardBalance(1);
-        if (firstCard - 10000 < 0) {
+        if (firstCard < 10000) {
             replenishmentCard(0)
                     .actionTransferForEquals(Integer.toString(10000 - firstCard), DataHelper.CardsNumber.getCardsNumber().getCard2());
-        } else if (firstCard - 10000 > 0) {
+        } else if (firstCard > 10000) {
             replenishmentCard(1)
                     .actionTransferForEquals(Integer.toString(10000 - secondCard), DataHelper.CardsNumber.getCardsNumber().getCard1());
         }
