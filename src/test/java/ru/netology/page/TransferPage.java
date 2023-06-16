@@ -1,8 +1,11 @@
 package ru.netology.page;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.Keys;
 
+import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
 public class TransferPage {
@@ -35,9 +38,10 @@ public class TransferPage {
         return new DashboardPage();
     }
 
-    public SelenideElement invalidInput(String amount, String from) {
+    public TransferPage invalidInput(String amount, String from, String msg) {
         transfer(amount, from);
         buttonTransfer.click();
-        return invalidInput;
+        invalidInput.shouldBe(text(msg), visible);
+        return this;
     }
 }

@@ -32,107 +32,135 @@ public class MoneyTransferTest {
 
     @Test
     public void happyPathTransferFromCard1() {
+        int amount = 5000;
+        int initBalance1 = dashboardPage.getCardBalance(0);
+        int initBalance2 = dashboardPage.getCardBalance(1);
         dashboardPage
                 .replenishmentCard(1)
-                .actionTransfer("5000", DataHelper.getCard1Info().getCard())
-                .getCards().get(1).shouldBe(text("15000"));
-        dashboardPage.getCards().get(0).shouldBe(text("5000"));
-        //assertEquals(5000, dashboardPage.getCardBalance(0));
+                .actionTransfer(Integer.toString(amount), DataHelper.getCard1Info().getCard());
+        assertEquals(initBalance1 - amount, dashboardPage.getCardBalance(0));
+        assertEquals(initBalance2 + amount, dashboardPage.getCardBalance(1));
     }
 
     @Test
     public void happyPathTransferFromCard2() {
+        int amount = 5000;
+        int initBalance1 = dashboardPage.getCardBalance(0);
+        int initBalance2 = dashboardPage.getCardBalance(1);
         dashboardPage
                 .replenishmentCard(0)
-                .actionTransfer("3000", DataHelper.getCard2Info().getCard())
-                .getCards().get(0).shouldBe(text("13000"));
-        dashboardPage.getCards().get(1).shouldBe(text("7000"));
+                .actionTransfer(Integer.toString(amount), DataHelper.getCard2Info().getCard());
+        assertEquals(initBalance1 + amount, dashboardPage.getCardBalance(0));
+        assertEquals(initBalance2 - amount, dashboardPage.getCardBalance(1));
     }
 
     @Test
     public void transferLimitValueFromCard1V1() {
+        int amount = 9999;
+        int initBalance1 = dashboardPage.getCardBalance(0);
+        int initBalance2 = dashboardPage.getCardBalance(1);
         dashboardPage
                 .replenishmentCard(1)
-                .actionTransfer("9999", DataHelper.getCard1Info().getCard())
-                .getCards().get(1).shouldBe(text("19999"));
-        dashboardPage.getCards().get(0).shouldBe(text("1"));
+                .actionTransfer(Integer.toString(amount), DataHelper.getCard1Info().getCard());
+        assertEquals(initBalance1 - amount, dashboardPage.getCardBalance(0));
+        assertEquals(initBalance2 + amount, dashboardPage.getCardBalance(1));
     }
 
     @Test
     public void transferLimitValueFromCard2V1() {
+        int amount = 9999;
+        int initBalance1 = dashboardPage.getCardBalance(0);
+        int initBalance2 = dashboardPage.getCardBalance(1);
         dashboardPage
                 .replenishmentCard(0)
-                .actionTransfer("9999", DataHelper.getCard2Info().getCard())
-                .getCards().get(0).shouldBe(text("19999"));
-        dashboardPage.getCards().get(1).shouldBe(text("1"));
+                .actionTransfer(Integer.toString(amount), DataHelper.getCard2Info().getCard());
+        assertEquals(initBalance1 + amount, dashboardPage.getCardBalance(0));
+        assertEquals(initBalance2 - amount, dashboardPage.getCardBalance(1));
     }
 
     @Test
     public void transferLimitValueFromCard1V2() {
+        int amount = 10000;
+        int initBalance1 = dashboardPage.getCardBalance(0);
+        int initBalance2 = dashboardPage.getCardBalance(1);
         dashboardPage
                 .replenishmentCard(1)
-                .actionTransfer("10000", DataHelper.getCard1Info().getCard())
-                .getCards().get(1).shouldBe(text("20000"));
-        dashboardPage.getCards().get(0).shouldBe(text("0"));
+                .actionTransfer(Integer.toString(amount), DataHelper.getCard1Info().getCard());
+        assertEquals(initBalance1 - amount, dashboardPage.getCardBalance(0));
+        assertEquals(initBalance2 + amount, dashboardPage.getCardBalance(1));
     }
 
     @Test
     public void transferLimitValueFromCard2V2() {
+        int amount = 10000;
+        int initBalance1 = dashboardPage.getCardBalance(0);
+        int initBalance2 = dashboardPage.getCardBalance(1);
         dashboardPage
                 .replenishmentCard(0)
-                .actionTransfer("10000", DataHelper.getCard2Info().getCard())
-                .getCards().get(0).shouldBe(text("20000"));
-        dashboardPage.getCards().get(1).shouldBe(text("0"));
+                .actionTransfer(Integer.toString(amount), DataHelper.getCard2Info().getCard());
+        assertEquals(initBalance1 + amount, dashboardPage.getCardBalance(0));
+        assertEquals(initBalance2 - amount, dashboardPage.getCardBalance(1));
     }
 
     @Test
     public void invalidActionTransferFromCard1IfAmountMoreThenBalanceTest() {
+        int amount = 10001;
+        String msg = "Произошла ошибка";
         dashboardPage
                 .replenishmentCard(1)
-                .invalidInput("10001", DataHelper.getCard1Info().getCard())
-                .shouldBe(text("Произошла ошибка"));
+                .invalidInput(Integer.toString(amount), DataHelper.getCard1Info().getCard(), msg);
     }
 
     @Test
     public void invalidActionTransferFromCard2IfAmountMoreThenBalanceTest() {
+        String msg = "Произошла ошибка";
         dashboardPage
                 .replenishmentCard(0)
-                .invalidInput("10001", DataHelper.getCard2Info().getCard())
-                .shouldBe(text("Произошла ошибка"));
+                .invalidInput("10001", DataHelper.getCard2Info().getCard(), msg);
     }
 
     @Test
     public void cancelTransferTest() {
+        int amount = 5000;
+        int initBalance1 = dashboardPage.getCardBalance(0);
+        int initBalance2 = dashboardPage.getCardBalance(1);
         dashboardPage
                 .replenishmentCard(0)
-                .cancelTransfer("5000", DataHelper.getCard2Info().getCard())
-                .getCards().get(1).shouldBe(text("10000"));
-        dashboardPage.getCards().get(0).shouldBe(text("10000"));
+                .cancelTransfer(Integer.toString(amount), DataHelper.getCard2Info().getCard());
+        assertEquals(initBalance1, dashboardPage.getCardBalance(0));
+        assertEquals(initBalance2, dashboardPage.getCardBalance(1));
     }
 
     @Test
     public void invalidActionTransferIfCardNumbersEqualsCard1Test() {
+        int amount = 5000;
+        int initBalance1 = dashboardPage.getCardBalance(0);
+        int initBalance2 = dashboardPage.getCardBalance(1);
         dashboardPage
                 .replenishmentCard(0)
-                .actionTransfer("5000", DataHelper.getCard1Info().getCard())
-                .getCards().get(1).shouldBe(text("10000"));
-        dashboardPage.getCards().get(0).shouldBe(text("10000"));
+                .actionTransfer(Integer.toString(amount), DataHelper.getCard1Info().getCard());
+        assertEquals(initBalance1, dashboardPage.getCardBalance(0));
+        assertEquals(initBalance2, dashboardPage.getCardBalance(1));
     }
 
     @Test
     public void invalidActionTransferIfCardNumbersEqualsCard2Test() {
+        int amount = 5000;
+        int initBalance1 = dashboardPage.getCardBalance(0);
+        int initBalance2 = dashboardPage.getCardBalance(1);
         dashboardPage
                 .replenishmentCard(1)
-                .actionTransfer("5000", DataHelper.getCard2Info().getCard())
-                .getCards().get(1).shouldBe(text("10000"));
-        dashboardPage.getCards().get(0).shouldBe(text("10000"));
+                .actionTransfer(Integer.toString(amount), DataHelper.getCard2Info().getCard());
+        assertEquals(initBalance1, dashboardPage.getCardBalance(0));
+        assertEquals(initBalance2, dashboardPage.getCardBalance(1));
     }
 
     @Test
     public void invalidActionTransferIfCardIsNotInServiceTest() {
+        String msg = "Произошла ошибка";
+        int amount = 5000;
         dashboardPage
                 .replenishmentCard(0)
-                .invalidInput("5000", "5559 0000 0000 0003")
-                .shouldBe(text("Произошла ошибка"));
+                .invalidInput(Integer.toString(amount), "5559 0000 0000 0003", msg);
     }
 }
